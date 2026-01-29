@@ -2,16 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import html2canvas from 'html2canvas';
 import { QRCodeCanvas } from 'qrcode.react';
-import { Download, Upload, Award } from 'lucide-react';
+import { Download, Upload, ShieldCheck } from 'lucide-react';
 
 export default function CertificateGenerator() {
   const [name, setName] = useState('DAFA PUTRA NAWAWI');
-  const [founder, setFounder] = useState('Narendra Wicaksono');
+  const [founder, setFounder] = useState('Andri Haryanto');
   const [signature, setSignature] = useState(null);
   const [date, setDate] = useState('');
   const certRef = useRef(null);
 
-  // Set real-time date
   useEffect(() => {
     const today = new Date();
     const options = { day: 'numeric', month: 'long', year: 'numeric' };
@@ -27,149 +26,131 @@ export default function CertificateGenerator() {
 
   const downloadCertificate = async () => {
     const element = certRef.current;
-    const canvas = await html2canvas(element, {
-      scale: 3, // High quality
-      useCORS: true,
-    });
+    const canvas = await html2canvas(element, { scale: 3, useCORS: true });
     const data = canvas.toDataURL('image/png');
     const link = document.createElement('a');
     link.href = data;
-    link.download = `Sertifikat-${name}.png`;
+    link.download = `Sertifikat-CodeDev-${name}.png`;
     link.click();
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-10 font-sans">
+    <div className="min-h-screen p-4 md:p-10">
       <Head>
-        <title>CodeDev | Certificate Generator</title>
+        <title>CodeDev | Premium Certificate</title>
       </Head>
 
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10">
         
-        {/* SIDEBAR INPUT */}
-        <div className="bg-white p-6 rounded-xl shadow-lg h-fit">
-          <h2 className="text-2xl font-bold mb-6 text-blue-900">Editor Sertifikat</h2>
+        {/* PANEL CONTROL */}
+        <div className="lg:col-span-4 bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 shadow-2xl text-white h-fit">
+          <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">Editor Sertifikat</h2>
           
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Nama Penerima</label>
+              <label className="text-sm font-semibold opacity-70">Nama Lengkap</label>
               <input 
                 type="text" 
-                className="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-white/5 border border-white/10 p-3 rounded-xl mt-2 focus:ring-2 focus:ring-blue-500 outline-none"
                 value={name}
                 onChange={(e) => setName(e.target.value.toUpperCase())}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Nama Pendiri (CEO)</label>
+              <label className="text-sm font-semibold opacity-70">Nama Pendiri (CEO)</label>
               <input 
                 type="text" 
-                className="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-white/5 border border-white/10 p-3 rounded-xl mt-2 focus:ring-2 focus:ring-blue-500 outline-none"
                 value={founder}
                 onChange={(e) => setFounder(e.target.value)}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Upload Tanda Tangan (PNG)</label>
-              <div className="mt-1 flex items-center justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                <div className="space-y-1 text-center">
-                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                  <div className="flex text-sm text-gray-600">
-                    <label className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500">
-                      <span>Pilih File</span>
-                      <input type="file" className="sr-only" onChange={handleSignatureUpload} accept="image/*" />
-                    </label>
-                  </div>
-                </div>
-              </div>
+              <label className="text-sm font-semibold opacity-70">Tanda Tangan (Upload PNG Transparan)</label>
+              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-white/20 rounded-xl cursor-pointer hover:bg-white/5 transition mt-2">
+                <Upload className="text-blue-400 mb-2" />
+                <span className="text-xs opacity-60">Klik untuk upload</span>
+                <input type="file" className="hidden" onChange={handleSignatureUpload} accept="image/*" />
+              </label>
             </div>
 
             <button 
               onClick={downloadCertificate}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-blue-700 transition"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 py-4 rounded-xl font-bold flex items-center justify-center gap-3 hover:scale-[1.02] transition shadow-xl"
             >
-              <Download size={20} /> Download Sertifikat
+              <Download size={20} /> Download PNG
             </button>
           </div>
         </div>
 
-        {/* CERTIFICATE PREVIEW */}
-        <div className="lg:col-span-2 flex justify-center overflow-x-auto">
+        {/* PREVIEW SERTIFIKAT */}
+        <div className="lg:col-span-8 flex justify-center items-start overflow-x-auto pb-10">
           <div 
             ref={certRef}
-            className="relative bg-white w-[800px] h-[560px] shadow-2xl overflow-hidden border-[16px] border-[#1a2e4c]"
-            style={{ minWidth: '800px' }}
+            className="relative bg-[#fafafa] w-[1000px] h-[700px] overflow-hidden flex flex-col items-center justify-between p-16 shadow-2xl border-[20px] border-[#1e293b]"
+            style={{ minWidth: '1000px' }}
           >
+            {/* Border Ornamen */}
+            <div className="absolute inset-4 border border-[#c5a059] pointer-events-none"></div>
+            <div className="absolute inset-8 border-2 border-[#c5a059]/30 pointer-events-none"></div>
+
             {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-5 pointer-events-none">
-              <div className="absolute rotate-45 -top-20 -left-20 w-64 h-64 bg-blue-900 rounded-full"></div>
-              <div className="absolute rotate-45 -bottom-20 -right-20 w-96 h-96 bg-blue-900 rounded-full"></div>
-            </div>
+            <div className="absolute top-0 right-0 w-80 h-80 bg-[#1e293b]/5 rounded-bl-full pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#c5a059]/5 rounded-tr-full pointer-events-none"></div>
 
             {/* Header */}
-            <div className="p-12 flex justify-between items-start">
-              <div>
-                <h1 className="text-4xl font-black text-[#1a2e4c] tracking-tighter">
-                  Code<span className="text-blue-600">Dev</span>
+            <div className="text-center z-10">
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <ShieldCheck size={40} className="text-[#c5a059]" />
+                <h1 className="text-5xl font-black text-[#1e293b] tracking-tighter">
+                  CODE<span className="text-[#c5a059]">DEV</span>
                 </h1>
-                <p className="text-xs tracking-[0.2em] text-gray-500 font-bold uppercase">Academy of Technology</p>
               </div>
-              <div className="bg-[#1a2e4c] text-white p-4 text-center rounded-b-lg">
-                <Award size={40} className="mx-auto text-yellow-400 mb-1" />
-                <p className="text-[10px] font-bold uppercase leading-tight">Sertifikat<br/>Kelulusan</p>
-              </div>
+              <p className="text-sm tracking-[0.4em] uppercase font-bold text-gray-400">Academy of Excellence</p>
             </div>
 
-            {/* Content */}
-            <div className="px-16 text-center">
-              <p className="text-gray-500 uppercase tracking-widest text-sm mb-4">Diberikan kepada</p>
-              <h2 className="text-4xl font-serif font-bold text-[#1a2e4c] mb-2 border-b-2 border-yellow-500 inline-block px-8 pb-2">
+            {/* Body */}
+            <div className="text-center z-10 -mt-10">
+              <h2 className="cert-title text-6xl text-[#c5a059] mb-8">Sertifikat Kelulusan</h2>
+              <p className="text-lg text-gray-500 italic mb-6">Penghargaan ini diberikan dengan bangga kepada:</p>
+              <h3 className="text-5xl font-bold text-[#1e293b] border-b-4 border-[#c5a059] px-12 pb-4 inline-block mb-8">
                 {name || "NAMA LENGKAP"}
-              </h2>
-              <p className="mt-6 text-gray-600 italic">
-                Telah berhasil menyelesaikan kelas pelatihan intensif di CodeDev
-              </p>
-              <h3 className="text-2xl font-bold text-blue-600 mt-2">
-                Professional Web Development Mastery
               </h3>
+              <p className="max-w-2xl mx-auto text-gray-600 leading-relaxed">
+                Atas dedikasi dan keberhasilannya menyelesaikan program pelatihan intensif 
+                <span className="font-bold text-[#1e293b]"> Professional Fullstack Web Development </span> 
+                di CodeDev Academy dengan hasil yang sangat memuaskan.
+              </p>
             </div>
 
             {/* Footer */}
-            <div className="absolute bottom-12 left-0 right-0 px-16 flex justify-between items-end">
-              <div className="text-left">
-                <p className="text-xs text-gray-400 mb-1">{date}</p>
-                <div className="h-16 w-40 flex items-center justify-start overflow-hidden mb-2">
-                   {signature ? (
-                     <img src={signature} alt="Signature" className="max-h-full" />
-                   ) : (
-                     <div className="h-px w-full bg-gray-300"></div>
-                   )}
+            <div className="w-full flex justify-between items-end z-10">
+              {/* Founder Section */}
+              <div className="text-left w-64">
+                <p className="text-xs text-gray-400 font-bold mb-4 uppercase tracking-widest">{date}</p>
+                <div className="h-20 flex items-end justify-start mb-2 border-b border-gray-300">
+                   {signature && <img src={signature} alt="Sign" className="max-h-full mix-blend-multiply" />}
                 </div>
-                <p className="text-sm font-bold text-[#1a2e4c]">{founder}</p>
-                <p className="text-[10px] text-gray-500">Chief Executive Officer, CodeDev</p>
+                <p className="text-xl font-bold text-[#1e293b]">{founder}</p>
+                <p className="text-xs font-bold text-[#c5a059] uppercase tracking-wider">CEO CodeDev Indonesia</p>
               </div>
 
+              {/* QR & Verification */}
               <div className="text-right flex flex-col items-end">
-                <div className="bg-white p-1 border border-gray-200 mb-2">
-                   <QRCodeCanvas value={`https://codedev.id/verify/${name.replace(/\s+/g, '-').toLowerCase()}`} size={60} />
+                <div className="p-2 bg-white border-2 border-[#c5a059] rounded-lg mb-4 shadow-md">
+                   <QRCodeCanvas value={`https://codedevsyntax.vercel.app/verify/${name.replace(/\s+/g, '-')}`} size={80} />
                 </div>
-                <p className="text-[10px] font-mono text-gray-400 tracking-tighter">
-                  ID: CD-{Math.floor(Math.random() * 1000000)}<br/>
-                  Berlaku hingga {new Date().getFullYear() + 3}
-                </p>
+                <div className="bg-[#1e293b] text-white px-4 py-2 rounded-md">
+                   <p className="text-[10px] font-mono tracking-tighter uppercase opacity-80">ID: CD-2026-{Math.floor(Math.random() * 90000) + 10000}</p>
+                   <p className="text-[9px] font-bold text-[#c5a059]">VERIFIED CERTIFICATE</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-
       </div>
-      
-      {/* Footer Branding */}
-      <footer className="text-center mt-12 text-gray-500 text-sm">
-        &copy; {new Date().getFullYear()} CodeDev Indonesia. Built for Professionalism.
-      </footer>
     </div>
   );
 }
