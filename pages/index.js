@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import html2canvas from 'html2canvas';
 import { QRCodeCanvas } from 'qrcode.react';
-import { Download, ShieldCheck, Eraser, PenTool } from 'lucide-react';
+import { Download, ShieldCheck, Eraser, PenTool, Star } from 'lucide-react';
 import SignatureCanvas from 'react-signature-canvas';
 
 export default function CertificateGenerator() {
@@ -20,7 +20,6 @@ export default function CertificateGenerator() {
     setDate(today.toLocaleDateString('id-ID', options));
   }, []);
 
-  // Fungsi untuk menyimpan hasil coretan ke sertifikat
   const saveSignature = () => {
     if (!sigCanvas.current.isEmpty()) {
       const dataURL = sigCanvas.current.getTrimmedCanvas().toDataURL('image/png');
@@ -28,7 +27,6 @@ export default function CertificateGenerator() {
     }
   };
 
-  // Fungsi hapus coretan
   const clearSignature = () => {
     sigCanvas.current.clear();
     setSignature(null);
@@ -39,79 +37,72 @@ export default function CertificateGenerator() {
     const canvas = await html2canvas(element, { 
       scale: 3, 
       useCORS: true,
-      backgroundColor: null 
+      backgroundColor: "#ffffff" 
     });
     const data = canvas.toDataURL('image/png');
     const link = document.createElement('a');
     link.href = data;
-    link.download = `Sertifikat-CodeDev-${name}.png`;
+    link.download = `Sertifikat-Modern-CodeDev-${name}.png`;
     link.click();
   };
 
   return (
-    <div className="min-h-screen p-4 md:p-10 bg-[#0f172a]">
+    <div className="min-h-screen p-4 md:p-10 bg-[#020617]">
       <Head>
-        <title>CodeDev | Signature Draw</title>
+        <title>CodeDev | Modern Certificate Generator</title>
       </Head>
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         {/* PANEL CONTROL */}
-        <div className="lg:col-span-4 bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20 shadow-2xl text-white h-fit">
-          <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">Editor Sertifikat</h2>
+        <div className="lg:col-span-4 bg-slate-900/50 backdrop-blur-xl p-8 rounded-[2rem] border border-slate-800 shadow-2xl text-white h-fit">
+          <h2 className="text-3xl font-black mb-8 bg-gradient-to-br from-white to-slate-500 bg-clip-text text-transparent">Editor <br/>Sertifikat</h2>
           
-          <div className="space-y-5">
+          <div className="space-y-6">
             <div>
-              <label className="text-xs font-semibold opacity-70 uppercase tracking-widest">Nama Penerima</label>
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Penerima Sertifikat</label>
               <input 
                 type="text" 
-                className="w-full bg-white/5 border border-white/10 p-3 rounded-xl mt-1 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                className="w-full bg-slate-800/50 border border-slate-700 p-4 rounded-2xl mt-2 focus:ring-2 focus:ring-blue-500 outline-none transition-all font-medium"
                 value={name}
                 onChange={(e) => setName(e.target.value.toUpperCase())}
               />
             </div>
 
             <div>
-              <label className="text-xs font-semibold opacity-70 uppercase tracking-widest">Nama CEO / Pendiri</label>
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Nama CEO</label>
               <input 
                 type="text" 
-                className="w-full bg-white/5 border border-white/10 p-3 rounded-xl mt-1 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                className="w-full bg-slate-800/50 border border-slate-700 p-4 rounded-2xl mt-2 focus:ring-2 focus:ring-blue-500 outline-none transition-all font-medium"
                 value={founder}
                 onChange={(e) => setFounder(e.target.value)}
               />
             </div>
 
-            {/* SIGNATURE PAD AREA */}
+            {/* SIGNATURE PAD */}
             <div>
-              <label className="text-xs font-semibold opacity-70 uppercase tracking-widest block mb-2">Gambar Tanda Tangan Disini</label>
-              <div className="bg-white rounded-xl overflow-hidden shadow-inner">
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] block mb-2">Tanda Tangan Digital</label>
+              <div className="bg-white rounded-2xl overflow-hidden shadow-inner border-4 border-slate-800">
                 <SignatureCanvas 
                   ref={sigCanvas}
                   penColor='black'
-                  canvasProps={{
-                    className: "w-full h-40 cursor-crosshair",
-                  }}
+                  canvasProps={{ className: "w-full h-36 cursor-crosshair" }}
                   onEnd={saveSignature}
                 />
               </div>
-              <div className="flex gap-2 mt-2">
-                <button 
-                  onClick={clearSignature}
-                  className="flex-1 flex items-center justify-center gap-2 bg-red-500/20 hover:bg-red-500/40 text-red-300 py-2 rounded-lg text-xs transition"
-                >
-                  <Eraser size={14} /> Hapus Coretan
-                </button>
-                <div className="flex-1 flex items-center justify-center gap-2 bg-emerald-500/20 text-emerald-300 py-2 rounded-lg text-xs">
-                  <PenTool size={14} /> Tanda Tangan Aktif
-                </div>
-              </div>
+              <button 
+                onClick={clearSignature}
+                className="w-full mt-3 flex items-center justify-center gap-2 bg-slate-800 hover:bg-red-500/20 hover:text-red-400 text-slate-400 py-3 rounded-xl text-xs font-bold transition-all"
+              >
+                <Eraser size={14} /> Reset Tanda Tangan
+              </button>
             </div>
 
             <button 
               onClick={downloadCertificate}
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 py-4 rounded-xl font-bold flex items-center justify-center gap-3 hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all active:scale-95 mt-4"
+              className="w-full bg-blue-600 hover:bg-blue-500 text-white py-5 rounded-2xl font-black flex items-center justify-center gap-3 transition-all active:scale-95 shadow-[0_20px_40px_-15px_rgba(37,99,235,0.4)]"
             >
-              <Download size={20} /> Download Sertifikat (PNG)
+              <Download size={22} /> CETAK SERTIFIKAT
             </button>
           </div>
         </div>
@@ -120,71 +111,84 @@ export default function CertificateGenerator() {
         <div className="lg:col-span-8 flex justify-center items-start overflow-x-auto pb-10">
           <div 
             ref={certRef}
-            className="relative bg-[#ffffff] w-[1000px] h-[700px] overflow-hidden flex flex-col items-center justify-between p-16 shadow-2xl border-[20px] border-[#1e293b]"
+            className="relative bg-white w-[1000px] h-[700px] overflow-hidden flex flex-col items-center justify-between p-20 shadow-2xl border-[24px] border-slate-950"
             style={{ minWidth: '1000px' }}
           >
-            {/* Ornamen Mewah */}
-            <div className="absolute inset-4 border border-[#c5a059] pointer-events-none"></div>
-            <div className="absolute inset-[18px] border-4 border-[#c5a059]/10 pointer-events-none"></div>
+            {/* Minimalist Tech Pattern */}
+            <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none" 
+                 style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', size: '20px 20px' }}></div>
 
-            {/* Header */}
-            <div className="text-center z-10">
-              <div className="flex items-center justify-center gap-3 mb-2">
-                <ShieldCheck size={48} className="text-[#c5a059]" />
-                <h1 className="text-6xl font-black text-[#1e293b] tracking-tighter">
-                  CODE<span className="text-[#c5a059]">DEV</span>
-                </h1>
-              </div>
-              <p className="text-sm tracking-[0.5em] uppercase font-bold text-gray-400">The Standard of Digital Excellence</p>
+            {/* LOGO PIAGAM GOLD (JS STYLE) */}
+            <div className="absolute top-12 right-12 flex flex-col items-center gap-2">
+                <div className="w-24 h-24 bg-[#EAB308] rounded-lg shadow-xl flex flex-col items-center justify-center relative transform rotate-[-5deg] border-4 border-white">
+                   <Star size={40} fill="white" className="text-white mb-1" />
+                   <span className="text-[10px] font-black text-white tracking-widest uppercase">EXCELLENCE</span>
+                   {/* JS Square Effect */}
+                   <div className="absolute bottom-1 right-1 font-black text-white/40 text-sm">2026</div>
+                </div>
             </div>
 
-            {/* Body */}
-            <div className="text-center z-10 w-full px-10">
-              <h2 className="text-6xl font-serif italic text-[#c5a059] mb-8" style={{fontFamily: 'serif'}}>Sertifikat Kelulusan</h2>
-              <p className="text-lg text-gray-500 uppercase tracking-widest mb-4">Diberikan secara terhormat kepada</p>
-              
-              <div className="relative inline-block mb-10">
-                <h3 className="text-5xl font-bold text-[#1e293b] px-12 pb-2">
-                  {name || "NAMA LENGKAP"}
-                </h3>
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#c5a059] to-transparent"></div>
+            {/* Header */}
+            <div className="w-full flex justify-start items-center z-10">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-slate-950 flex items-center justify-center rounded-xl">
+                  <ShieldCheck size={28} className="text-[#EAB308]" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-black text-slate-950 tracking-tighter leading-none">CODE<span className="text-[#EAB308]">DEV</span></h1>
+                  <p className="text-[8px] font-black tracking-[0.4em] uppercase text-slate-400">Verified Tech Academy</p>
+                </div>
               </div>
+            </div>
 
-              <p className="max-w-2xl mx-auto text-gray-600 leading-relaxed text-lg">
-                Telah berhasil menunjukkan kompetensi luar biasa dan menyelesaikan kurikulum 
-                <span className="font-bold text-[#1e293b]"> Fullstack Engineer & System Architect </span> 
-                dengan predikat kelulusan memuaskan.
+            {/* Content Body */}
+            <div className="text-center z-10 w-full">
+              <h2 className="cert-header-font text-5xl text-slate-950 mb-4 opacity-20">CERTIFICATE</h2>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-[0.4em] mb-8">PENGHARGAAN DIBERIKAN KEPADA</p>
+              
+              <h3 className="modern-name text-[70px] font-black text-slate-950 leading-none mb-10 tracking-tight">
+                {name || "YOUR NAME HERE"}
+              </h3>
+
+              <div className="w-24 h-1 bg-[#EAB308] mx-auto mb-10"></div>
+
+              <p className="max-w-2xl mx-auto text-slate-500 leading-relaxed text-lg font-medium">
+                Dinyatakan lulus dengan predikat <span className="text-slate-950 font-black italic underline decoration-[#EAB308] decoration-4">Sangat Memuaskan</span> dalam program 
+                pelatihan profesional pengembangan ekosistem teknologi modern CodeDev.
               </p>
             </div>
 
-            {/* Footer Section */}
-            <div className="w-full flex justify-between items-end z-10">
-              {/* Founder Signature Area */}
-              <div className="text-left w-64">
-                <p className="text-[10px] text-gray-400 font-bold mb-2 uppercase tracking-widest">{date}</p>
-                <div className="h-24 flex items-end justify-start mb-2 relative">
+            {/* Footer */}
+            <div className="w-full flex justify-between items-end z-10 pt-10">
+              {/* Left: Founder */}
+              <div className="text-left">
+                <div className="h-24 flex items-end mb-2 relative min-w-[200px]">
                    {signature ? (
-                     <img src={signature} alt="Digital Sign" className="max-h-full transition-opacity duration-500" />
+                     <img src={signature} alt="Sign" className="max-h-full mix-blend-multiply transition-all scale-125 origin-bottom-left" />
                    ) : (
-                     <div className="w-full border-b border-dashed border-gray-300 mb-4"></div>
+                     <div className="w-48 h-[1px] bg-slate-200 mb-6"></div>
                    )}
                 </div>
-                <p className="text-xl font-bold text-[#1e293b] border-t border-[#1e293b]/10 pt-1">{founder}</p>
-                <p className="text-[10px] font-bold text-[#c5a059] uppercase tracking-[0.2em]">Chief Executive Officer</p>
+                <p className="text-2xl font-black text-slate-950 tracking-tighter">{founder}</p>
+                <p className="text-[10px] font-black text-[#EAB308] uppercase tracking-widest">Chief Executive Officer</p>
+                <p className="text-[10px] text-slate-300 font-bold mt-1 uppercase">{date}</p>
               </div>
 
-              {/* QR Code & Security */}
-              <div className="text-right flex flex-col items-end">
-                <div className="p-2 bg-white border border-[#c5a059]/40 rounded-xl mb-3 shadow-lg">
+              {/* Right: Security & QR */}
+              <div className="flex items-center gap-6">
+                <div className="text-right border-r-2 border-slate-100 pr-6">
+                   <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-1">Authenticity Link</p>
+                   <p className="text-[9px] font-mono text-slate-400 truncate w-32 tracking-tighter">codedevsyntax.vercel.app/verify</p>
+                   <div className="mt-2 bg-slate-950 text-white text-[8px] font-black px-2 py-1 rounded-sm inline-block tracking-tighter">
+                     ID: CD-{Math.floor(100000 + Math.random() * 900000)}
+                   </div>
+                </div>
+                <div className="p-3 bg-white border-2 border-slate-50 rounded-2xl shadow-sm">
                    <QRCodeCanvas 
                     value={`https://codedevsyntax.vercel.app/verify/${name.replace(/\s+/g, '-').toLowerCase()}`} 
-                    size={85}
+                    size={80}
                     level="H"
                    />
-                </div>
-                <div className="text-right">
-                   <p className="text-[9px] font-mono text-gray-400 uppercase tracking-tighter">Verification ID: CD-{Math.floor(100000 + Math.random() * 900000)}</p>
-                   <p className="text-[10px] font-black text-[#1e293b] tracking-widest">SECURE & VERIFIED</p>
                 </div>
               </div>
             </div>
